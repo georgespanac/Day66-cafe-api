@@ -49,6 +49,22 @@ def all():
         all.insert(0, cafe.to_dict())
     return jsonify(all)
 
+@app.route("/search")
+def search():
+    location = request.args.get('location')
+    cafe = Cafe.query.filter_by(location=location).first()
+    if cafe:
+        return jsonify(cafe.to_dict())
+    else:
+        return jsonify({"Not Found": "Sorry, we dont have that cafe at that location"})
+
+@app.route("/add")
+def add():
+    new_cafe = Cafe(name=request.form["name"], map_url=request.form["map_url"])
+    db.session.add(new_cafe)
+    db.session.commit()
+    return jsonify({"response": {"sucess":"Succesfully added a new cafe"}})
+
 @app.route("/random")
 def random():
     random_cafe = choice(Cafe.query.all())
