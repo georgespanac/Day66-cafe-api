@@ -77,6 +77,18 @@ def update_price(cafe_id):
     else:
         return jsonify(error={"Not Found": "Cafe with id not found!"}), 404
 
+@app.route("/report_closed/<cafe_id>")
+def report_closed(cafe_id):
+    if request.args.get('api-key') == "TopSecretAPIKey":
+        cafe = Cafe.query.get(cafe_id)
+        if cafe:
+            db.session.delete(cafe)
+            db.session.commit()
+            return jsonify(response={"sucess": "Succesfully deleted the Cafe"}), 200
+        else:
+            return jsonify(error={"Not Found": "Cafe with id not found!"}), 404
+    else:
+        return jsonify(error="That's not allowed, Make sure you have the correct api-key"), 403
 
 @app.route("/random")
 def random():
