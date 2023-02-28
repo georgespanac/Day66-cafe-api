@@ -65,6 +65,19 @@ def add():
     db.session.commit()
     return jsonify({"response": {"sucess":"Succesfully added a new cafe"}})
 
+
+@app.route("/update_price/<cafe_id>")
+def update_price(cafe_id):
+    cafe = Cafe.query.get(cafe_id)
+    if cafe:
+        new_price = request.args.get('new_price')
+        cafe.coffee_price = new_price
+        db.session.commit()
+        return jsonify(response={"sucess": "Succesfully updated the price"}), 200
+    else:
+        return jsonify(error={"Not Found": "Cafe with id not found!"}), 404
+
+
 @app.route("/random")
 def random():
     random_cafe = choice(Cafe.query.all())
